@@ -226,6 +226,9 @@ $(call inherit-product, vendor/aosp/config/bootanimation.mk)
 # Branding
 $(call inherit-product, vendor/aosp/config/branding.mk)
 
+# Elegance
+include vendor/overlays/Elegance/elegance.mk
+
 # Fonts
 $(call inherit-product, vendor/aosp/config/fonts.mk)
 

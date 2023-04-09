@@ -236,6 +236,10 @@ $(call inherit-product, vendor/aosp/config/branding.mk)
 # Elegance
 include vendor/overlays/Elegance/elegance.mk
 
+# Monochromatic monet theme style
+PRODUCT_SYSTEM_DEFAULT_PROPERTIES += \
+    persist.sysui.monochromatic=true
+
 # Fonts
 $(call inherit-product, vendor/aosp/config/fonts.mk)
 

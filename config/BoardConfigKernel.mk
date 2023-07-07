@@ -182,6 +182,12 @@ ifneq ($(KERNEL_NO_GCC), true)
         ifneq ($(TARGET_KERNEL_LLVM_BINUTILS), false)
             KERNEL_MAKE_FLAGS += LD=$(TARGET_KERNEL_CLANG_PATH)/bin/ld.lld
             KERNEL_MAKE_FLAGS += AR=$(TARGET_KERNEL_CLANG_PATH)/bin/llvm-ar
+            KERNEL_MAKE_FLAGS += NM=$(TARGET_KERNEL_CLANG_PATH)/bin/llvm-nm
+            KERNEL_MAKE_FLAGS += STRIP=$(TARGET_KERNEL_CLANG_PATH)/bin/llvm-strip
+            KERNEL_MAKE_FLAGS += OBJCOPY=$(TARGET_KERNEL_CLANG_PATH)/bin/llvm-objcopy
+            KERNEL_MAKE_FLAGS += OBJDUMP=$(TARGET_KERNEL_CLANG_PATH)/bin/llvm-objdump
+            KERNEL_MAKE_FLAGS += READELF=$(TARGET_KERNEL_CLANG_PATH)/bin/llvm-readelf
+            KERNEL_MAKE_FLAGS += OBJSIZE=$(TARGET_KERNEL_CLANG_PATH)/bin/llvm-size
         endif
     endif
 else

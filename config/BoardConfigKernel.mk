@@ -25,7 +25,6 @@
 #   TARGET_KERNEL_CROSS_COMPILE_PREFIX = Compiler prefix (e.g. arm-eabi-)
 #                                          defaults to arm-linux-androidkernel- for arm
 #                                                      aarch64-linux-android- for arm64
-#                                                      x86_64-linux-android- for x86
 #
 #   TARGET_KERNEL_CROSS_COMPILE_PREFIX_ARM32 = Compiler prefix for building vDSO32
 #                                              defaults to arm-linux-androidkernel-
@@ -116,6 +115,14 @@ TOOLS_PATH_OVERRIDE := \
     PERL5LIB=$(BUILD_TOP)/prebuilts/tools-custom/common/perl-base
 
 ifneq ($(KERNEL_NO_GCC), true)
+    ifeq ($(TARGET_CLANG_WITH_GNU_BINUTILS),true)
+    # arm64 toolchain
+    KERNEL_TOOLCHAIN_arm64 := $(CLANG_PREBUILTS)/bin
+    KERNEL_TOOLCHAIN_PREFIX_arm64 := aarch64-linux-gnu-
+    # arm toolchain
+    KERNEL_TOOLCHAIN_arm := $(KERNEL_TOOLCHAIN_arm64)
+    KERNEL_TOOLCHAIN_PREFIX_arm := arm-linux-gnueabi-
+    else
     GCC_PREBUILTS := $(BUILD_TOP)/prebuilts/gcc/$(HOST_PREBUILT_TAG)
     # arm64 toolchain
     KERNEL_TOOLCHAIN_arm64 := $(GCC_PREBUILTS)/aarch64/aarch64-linux-android-4.9/bin
@@ -123,9 +130,7 @@ ifneq ($(KERNEL_NO_GCC), true)
     # arm toolchain
     KERNEL_TOOLCHAIN_arm := $(GCC_PREBUILTS)/arm/arm-linux-androideabi-4.9/bin
     KERNEL_TOOLCHAIN_PREFIX_arm := arm-linux-androidkernel-
-    # x86 toolchain
-    KERNEL_TOOLCHAIN_x86 := $(GCC_PREBUILTS)/x86/x86_64-linux-android-4.9/bin
-    KERNEL_TOOLCHAIN_PREFIX_x86 := x86_64-linux-android-
+    endif
 
     TARGET_KERNEL_CROSS_COMPILE_PREFIX := $(strip $(TARGET_KERNEL_CROSS_COMPILE_PREFIX))
     ifneq ($(TARGET_KERNEL_CROSS_COMPILE_PREFIX),)
@@ -195,6 +200,8 @@ ifneq ($(KERNEL_NO_GCC), true)
     # Set the full path to the clang command and LLVM binutils
     KERNEL_MAKE_FLAGS += HOSTCC=$(TARGET_KERNEL_CLANG_PATH)/bin/clang
     KERNEL_MAKE_FLAGS += HOSTCXX=$(TARGET_KERNEL_CLANG_PATH)/bin/clang++
+    KERNEL_MAKE_FLAGS += HOSTAR=$(TARGET_KERNEL_CLANG_PATH)/bin/llvm-ar
+    KERNEL_MAKE_FLAGS += HOSTLD=$(TARGET_KERNEL_CLANG_PATH)/bin/ld.lld
     ifneq ($(TARGET_KERNEL_CLANG_COMPILE), false)
         ifneq ($(TARGET_KERNEL_LLVM_BINUTILS), false)
             KERNEL_MAKE_FLAGS += LD=$(TARGET_KERNEL_CLANG_PATH)/bin/ld.lld
